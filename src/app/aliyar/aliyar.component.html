@@ -1,0 +1,228 @@
+<div class="container">
+
+    <div class="pageHeader" *ngIf="!fromAdmin">
+        <div class="headerText">
+            <h1>Data Entry</h1>
+            <h2>Aliyar Dam</h2>
+        </div>
+        <div class="initButton">
+            <button class="headerButton" (click)="initDataEntry()">
+                Enter Data
+            </button>
+            <button class="headerButton" (click)="logOut()">
+                Logout
+            </button>
+            <button class="headerButton" (click)="initSettings()">
+                Settings
+            </button>
+        </div>
+    </div>
+    
+    <div class="dataEntryForm" *ngIf = "showForm">
+        <table>
+            
+            <tr>
+                <td class="labelBox">
+                    <label for="date" class="inputLabel">Date</label>
+                
+                    <input type="datetime-local" [(ngModel)] ='date' class="inputBox" (change)="viewData()" [disabled]="disableDateButton" [min]="minDate">
+                </td>
+
+                
+            </tr>
+            <tr>
+                <td class="labelBox">
+                    <label for="frl" class="inputLabel">FRL</label>
+                
+                    <input type="number" [(ngModel)] ='frl' class="inputBox" disabled>
+                </td>
+
+                <td class="labelBox">
+                    <label for="grossStorage" class="inputLabel">Gross Storage</label>
+                
+                    <input type="number" [(ngModel)] ='grossStorage' class="inputBox" disabled>
+                </td>
+                <td class="labelBox">
+                    <label for="warningLevel" class="inputLabel">Warning Level</label>
+                
+                    <input type="number" min="0" [(ngModel)] ='warningLevel' class="inputBox" disabled>
+                </td>
+                <td class="labelBox">
+                    <label for="level" class="inputLabel">Level</label>
+                
+                    <input type="number" min="0" [(ngModel)] ='level' class="inputBox">
+                </td>
+               
+
+                <td class="labelBox">
+                    <label for="storage" class="inputLabel">Storage</label>
+                
+                    <input type="number" min="0" [(ngModel)] ='storage' class="inputBox">
+                </td>  
+                <td class="labelBox">
+                    <label for="sluice" class="inputLabel">Sluice</label>
+                
+                    <input type="number" min="0" [(ngModel)] ='sluice' class="inputBox">
+                </td>
+                
+            </tr>
+
+            <tr>
+
+                
+                  
+                <td class="labelBox">
+                    
+                    <label for="spillway" class="inputLabel">Spillway Cumics </label>
+                    
+                    <input type="number" min="0" [(ngModel)] ='spillway' class="inputBox">
+                </td>
+
+                <td class="labelBox">
+                    
+                    <label for="rainfall" class="inputLabel">Rainfall </label>
+                
+                    
+                    <input type="number" min="0" [(ngModel)] ='rainfall' class="inputBox">
+                </td> 
+            
+                <td class="labelBox">
+                    
+                    <label for="remarks" class="inputLabel">Remarks </label>
+                
+                
+                    <input type="text" [(ngModel)] ='remarks' class="inputBox">
+                </td>
+
+                <td class="labelBox">
+                    
+                    <label for="totalOutflow" class="inputLabel">Total Outflow </label>
+                
+                    
+                    <input type="number" [(ngModel)] ='totalOutflow' class="inputBox" disabled>
+                </td>
+            
+                <td class="labelBox">
+                    
+                    <label for="totalInflow" class="inputLabel">Total Inflow </label>
+                
+                    
+                    <input type="number" [(ngModel)] ='totalInflow' class="inputBox" disabled>
+                </td>
+            </tr>
+        
+        </table>
+        
+        <div  *ngIf="!isEntering">
+            <button class="submitButton" (click)="sendData()">Enter</button>
+            <button class="submitButton" (click)="updateData()"> Update</button>
+        </div>
+
+        <p class="loadingText" *ngIf="isEntering">Loading...</p>
+        
+    </div>
+    
+    <div class="displayContainer" *ngIf="showTable">
+        <p class="loadingText" *ngIf="!isTableVisible">Loading...</p>
+        <table *ngIf="displayData.length > 0 && isTableVisible" class="displayTable">
+            <thead>
+                <tr>
+                    <th class="dateCol">Date</th>
+                    <th>Level</th>
+                    <th>Storage</th>
+                    <th>Rainfall</th>
+                    <th>Spillway</th>
+                    <th>Sluice</th>
+                    <th>Inflow</th>
+                    <th>Outflow</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let item of displayData">
+                    <td class="dateCol">{{ item.date}}</td>
+                    <td>{{ item.level }}</td>
+                    <td>{{ item.storage }}</td>
+                    <td>{{ item.rainfall }}</td>
+                    <td>{{ item.spillway }}</td>
+                    <td>{{item.sluice}}</td>
+                    <td>{{ item.totalInflow }}</td>
+                    <td>{{ item.totalOutflow }}</td>
+                </tr>
+            </tbody>
+        </table>
+        <h1 *ngIf="displayData.length === 0 && isTableVisible">No data available</h1>
+    </div>
+    
+    <div class="settingsContainer" *ngIf="showSettings">
+        <div class="settingsButtons">
+            <button class="headerButton" (click)="showCredentialsContainer('username')">
+                Change Username
+            </button>
+            <button class="headerButton" (click)="showCredentialsContainer('password')">
+                Change Password
+            </button>
+        </div>
+
+        <div class="settingsInputContainer">
+            <table *ngIf="showUsernameTable">
+                <tr>
+                    <td>
+                        <label for="username" class="inputLabel">Current Username</label>
+                    </td>
+                    <td>
+                        <input type="text" class="inputBox" [(ngModel)]="username" required>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="username" class="inputLabel">New Username</label>
+                    </td>
+                    <td>
+                        
+                        <input type="text" class="inputBox" [(ngModel)]="newCredential" required>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="password" class="inputLabel">Password</label>
+                    </td>
+                    <td>
+                        <input type="password" class="inputBox" [(ngModel)]="password" required>
+                    </td>
+                </tr>
+            </table>
+
+            <table *ngIf="showPasswordTable">
+                <tr>
+                    <td>
+                        <label for="username" class="inputLabel">Username</label>
+                    </td>
+                    <td>
+                        <input type="text" class="inputBox" [(ngModel)]="username">
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="password" class="inputLabel">Current Password</label>
+                    </td>
+                    <td>
+                        <input type="password" class="inputBox" [(ngModel)]="password" required>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="password" class="inputLabel">New Password</label>
+                    </td>
+                    <td>
+                        <input type="password" class="inputBox" [(ngModel)]="newCredential" required>
+                    </td>
+                </tr>
+            </table>
+
+            <button class="submitButton" (click)="changeCredentials()" *ngIf="username&&password&&newCredential">
+                Change
+            </button>
+        </div>
+    </div>
+
+</div>

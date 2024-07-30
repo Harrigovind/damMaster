@@ -1,0 +1,33 @@
+<div class="loginBox">
+    <div class="loginHeader">
+        Login
+    </div>
+    <div class="loginUsername" >
+        <label for="username">Username</label>
+        <input 
+            type="text"
+            placeholder="Enter Username"
+            class = "inputBox"
+            id="username"
+            [(ngModel)] = 'username'
+        />
+
+    </div>
+    <div class="loginPassword"> 
+
+        <label for="password"> Password</label>
+        <input
+        type="password"
+        placeholder="Enter Password"
+        class="inputBox"
+        id="password"
+        [(ngModel)] = 'password'
+        />
+    </div>
+        
+    <button class="loginButton" type="submit" id="loginButton" (click)="login()" *ngIf="!isLoading">
+        Login
+    </button>
+
+    <p class="loadingText" *ngIf="isLoading">Loading...</p>
+</div>

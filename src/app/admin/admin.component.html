@@ -1,0 +1,98 @@
+<div class="pageHeader">
+    <ul class="dropdown">
+        <li><button (click)="showDataEntryDropdown()" class="headerButton">Data Entry</button></li>
+        <li><button (click)="showUserSettings()" class="headerButton">User Settings</button></li>
+        <li><button (click)="logOut()" class="headerButton">Logout</button></li>
+    </ul>
+<div class="headerText">
+    <h1>Admin</h1>
+</div>
+
+<div *ngIf="!dataEntryDropdown" class="dummyDiv"></div>
+<select (change)="dataEntrySelect($event)" *ngIf="dataEntryDropdown" class="stationSelectDropdown">
+    <option value="" disabled selected>Select</option>
+    <option *ngFor="let destination of locations" [value]="destination">{{destination}}</option>
+</select>
+</div>
+
+<div class="pageContent">
+<router-outlet *ngIf="!showUserSettingsTable"></router-outlet>
+
+<div class="userSettingsTable" *ngIf="showUserSettingsTable">
+
+    <div class="userSettingsTableButtonsContainer">
+        <button class="userSettingsButton" (click)="viewUsers()"> View Users</button>
+        <button class="userSettingsButton" (click)="addUser()"> Add User</button>
+        <button class="userSettingsButton" (click)="removeUser()"> Remove User</button>
+        <button class="userSettingsButton" (click)="updateUser()"> Update User</button>
+    </div>
+
+    <div class="viewUserTable" *ngIf="showViewUsersTable">
+        <p class="loadingText" *ngIf="!isTableVisible">Loading...</p>
+        <table *ngIf="userDetails.length > 0 && isTableVisible" class="displayTable">
+            <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Password</th>
+                    <th>Access</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let item of userDetails">
+                    <td>{{ item.username }}</td>
+                    <td>{{ item.password }}</td>
+                    <td>{{ item.access}}</td>
+                </tr>
+            </tbody>
+        </table>
+        <h1 *ngIf="userDetails.length === 0 && isTableVisible">No data available</h1>
+    </div>
+
+    <div class="userSettingsTableFormContainer">
+        <div class="userForm" *ngIf="showAddUserForm">
+            <div class="userInput">
+                <label for="username">Enter Username</label>
+                <input type="text" [(ngModel)] ='username' class="inputBox" required>
+            </div>
+            <div class="userInput">
+                <label for="password">Enter Password</label>
+                <input type="password" [(ngModel)] ='password' class="inputBox" required>  
+            </div>
+            <div class="userInput">
+                <label for="access">Enter Station</label>
+                <input type="text" [(ngModel)] ='thirdVar' class="inputBox" required>
+            </div>
+
+            <button class="headerButton" (click)="postFn('addUser')" *ngIf="!isEntering">Submit</button>
+        </div>
+        <div class="userForm" *ngIf="showRemoveUserForm">
+            <div class="userInput">
+                <label for="username">Enter Username</label>
+                <input type="text" [(ngModel)] ='username' class="inputBox" required>
+            </div>
+            <div class="userInput">
+                <label for="password">Admin Password</label>
+                <input type="password" [(ngModel)] ='password' class="inputBox" required>
+            </div>
+
+            <button class="headerButton" (click)="postFn('removeUser')" *ngIf="!isEntering">Submit</button>
+        </div>
+        <div class="userForm" *ngIf="showUpdateUserForm">
+            <div class="userInput">
+                <label for="username">Enter Username</label>
+                <input type="text" [(ngModel)] ='username' class="inputBox" required>
+            </div>
+            <div class="userInput">
+                <label for="password">Enter Password</label>
+                <input type="password" [(ngModel)] ='password' class="inputBox" required>
+            </div>
+
+            <button class="headerButton" (click)="postFn('updateUser')" *ngIf="!isEntering">Submit</button>
+            
+        </div>
+        <div *ngIf="isEntering" class="loadingDiv">
+            Loading...
+        </div>
+    </div>
+</div>
+</div>
